@@ -2,56 +2,37 @@ name: DevOps CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  build-test-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
+      # 1. Checkout
       - name: Checkout Code
         uses: actions/checkout@v3
 
       # 2. Setup Node
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # 3. Install dependencies
+      # 3. Install
       - name: Install Dependencies
         run: npm install
         working-directory: app
 
-      # 4. Run tests
+      # 4. Test
       - name: Run Tests
         run: npm test
         working-directory: app
 
-      # 5. Build Docker image
+      # 5. Build Docker Image
       - name: Build Docker Image
         run: docker build -t devops-app:latest -f docker/Dockerfile .
 
-      # 6. (Optional) List images
-      - name: Verify Image
+      # 6. Verify
+      - name: List Images
         run: docker images
-
-      # 7. Setup kubectl
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
-
-      # 8. Configure kubeconfig
-      - name: Set Kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-
-      # 9. Deploy to Kubernetes
-      - name: Deploy to K8s
-        run: kubectl apply -f k8s/
-
-      # 10. Restart deployment (force new image)
-      - name: Restart Deployment
-        run: kubectl rollout restart deployment devops-app
