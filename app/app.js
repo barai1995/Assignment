@@ -3,23 +3,18 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// Root endpoint
-app.get('/', (req, res) => {
-  res.send('🚀 DevOps Assignment Running Successfully');
+// Serve static files
+app.use(express.static('public'));
+
+// APIs
+app.get('/api/health', (req, res) => {
+  res.json({ status: "OK 🚀" });
 });
 
-// Health check (for Kubernetes)
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
-});
-
-// Simulate load endpoint
-app.get('/load', (req, res) => {
+app.get('/api/load', (req, res) => {
   let total = 0;
-  for (let i = 0; i < 1e6; i++) {
-    total += i;
-  }
-  res.send(`Load calculated: ${total}`);
+  for (let i = 0; i < 1e6; i++) total += i;
+  res.json({ result: total });
 });
 
 app.listen(PORT, () => {

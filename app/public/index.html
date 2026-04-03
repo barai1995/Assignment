@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DevOps App 🚀</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #0f172a;
+      color: white;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+    .health { background: green; }
+    .load { background: orange; }
+  </style>
+</head>
+
+<body>
+  <h1>🚀 DevOps Assignment Dashboard</h1>
+
+  <button class="health" onclick="checkHealth()">Check Health</button>
+  <button class="load" onclick="runLoad()">Run Load</button>
+
+  <h2 id="output"></h2>
+
+  <script>
+    async function checkHealth() {
+      const res = await fetch('/api/health');
+      const data = await res.json();
+      document.getElementById('output').innerText = data.status;
+    }
+
+    async function runLoad() {
+      const res = await fetch('/api/load');
+      const data = await res.json();
+      document.getElementById('output').innerText = "Load Result: " + data.result;
+    }
+  </script>
+</body>
+</html>
