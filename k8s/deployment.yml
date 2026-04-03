@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: devops-container
-        image: devops-app:latest
-        imagePullPolicy: Never   # IMPORTANT for local
+        image: baraishubham78/harness-project:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
 

@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,20 +19,56 @@ jobs:
         with:
           node-version: 18
 
-      # 3. Install
+      # 3. Install + Test
       - name: Install Dependencies
         run: npm install
-        working-directory: app
+        working-directory: ./app
 
       # 4. Test
       - name: Run Tests
         run: npm test
-        working-directory: app
+        working-directory: ./app
 
-      # 5. Build Docker Image
+      # 4. Login Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 5. Build Image
       - name: Build Docker Image
         run: docker build -t devops-app:latest -f docker/Dockerfile .
 
-      # 6. Verify
-      - name: List Images
-        run: docker images
+      # 6. Tag Image
+      - name: Tag Image
+        run: docker tag devops-app:latest ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
+
+      # 7. Push Image
+      - name: Push Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      # 1. Checkout
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Setup kubectl
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      # 3. Configure kubeconfig
+      - name: Set Kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+
+      # 4. Update Deployment Image
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/devops-app devops-container=${{ secrets.DOCKER_USERNAME }}/devops-app:latest
+          kubectl rollout status deployment/devops-app
