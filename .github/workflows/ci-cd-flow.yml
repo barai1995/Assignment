@@ -41,22 +41,14 @@ jobs:
         run: docker push baraishubham78/harness-project:latest
 
   deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-push
+  runs-on: [self-hosted, Windows, X64]
+  needs: build-and-push
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
-
-      - name: Configure kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl set image deployment/devops-app devops-container=baraishubham78/harness-project:latest
-          kubectl rollout status deployment/devops-app
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl set image deployment/devops-app devops-container=baraishubham78/harness-project:latest
+        kubectl rollout status deployment/devops-app

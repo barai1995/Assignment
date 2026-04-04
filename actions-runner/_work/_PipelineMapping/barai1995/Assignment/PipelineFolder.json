@@ -1,0 +1,12 @@
+﻿{
+  "repositoryName": "barai1995/Assignment",
+  "pipelineDirectory": "Assignment",
+  "workspaceDirectory": "Assignment\\Assignment",
+  "repositories": {
+    "barai1995/Assignment": {
+      "repositoryPath": "Assignment\\Assignment",
+      "lastRunOn": "04/03/2026 21:25:43 +05:30"
+    }
+  },
+  "lastRunOn": "04/03/2026 21:25:43 +05:30"
+}

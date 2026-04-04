@@ -1,0 +1,11 @@
+﻿{
+  "agentId": 21,
+  "agentName": "DESKTOP-488D3Q7",
+  "poolId": 1,
+  "poolName": "Default",
+  "serverUrl": "https://pipelinesghubeus4.actions.githubusercontent.com/ANKuZOuKuqEU3iVbqRo17tQRe0m68KU9kgdAtZMHRgSajEU6t3/",
+  "gitHubUrl": "https://github.com/barai1995/Assignment",
+  "workFolder": "_work",
+  "useV2Flow": true,
+  "serverUrlV2": "https://broker.actions.githubusercontent.com/"
+}
